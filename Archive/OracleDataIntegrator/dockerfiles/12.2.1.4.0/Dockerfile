@@ -4,11 +4,11 @@
 #
 # ORACLE DOCKERFILES PROJECT
 # --------------------------
-# This is the Dockerfile for Oracle Data Integrator 12.2.1.3.0
+# This is the Dockerfile for Oracle Data Integrator 12.2.1.4.0
 #
 # Base image of this dockerfile is Oracle Java 8 docker image.
 #
-# Pre-requisite to build oracle Oracle Data Integrator 12.2.1.3.0 image is to have
+# Pre-requisite to build oracle Oracle Data Integrator 12.2.1.4.0 image is to have
 # Oracle Java 8 docker image
 #
 # To build Oracle Java 8 docker image, kindly refer below link
@@ -16,8 +16,7 @@
 #
 # REQUIRED FILES TO BUILD THIS IMAGE
 # ----------------------------------
-# (1) fmw_12.2.1.3.0_odi_Disk1_1of2.zip
-# (2) fmw_12.2.1.3.0_odi_Disk1_2of2.zip
+# (1) fmw_12.2.1.4.0_odi_Disk1_1of1.zip
 #   Download the production distribution for Oracle Data Integrator from the Oracle Software Delivery Cloud
 #
 # HOW TO BUILD THIS IMAGE
@@ -25,7 +24,7 @@
 # Put all downloaded files in the same directory as this Dockerfile
 # Make sure that Oracle Java 8 image is available
 # Run:
-#      $ docker build -t oracle/odi:12.2.1.3.0 .
+#      $ docker build -t oracle/odi:12.2.1.4.0 .
 #
 #
 # Pull base image
@@ -40,10 +39,8 @@ MAINTAINER Manish Vaishnani <manish.vaishnani@oracle.com>
 #
 # Environment variables required for this build (do NOT change)
 # -------------------------------------------------------------
-ENV ODI_PKG1=fmw_12.2.1.3.0_odi_Disk1_1of2.zip \
-    ODI_PKG2=fmw_12.2.1.3.0_odi_Disk1_2of2.zip \
-    ODI_JAR=fmw_12.2.1.3.0_odi.jar \
-    ODI_JAR2=fmw_12.2.1.3.0_odi2.jar \
+ENV ODI_PKG1=fmw_12.2.1.4.0_odi_Disk1_1of1.zip \
+    ODI_JAR=fmw_12.2.1.4.0_odi.jar \
     ORACLE_HOME=/u01/oracle \
     PATH=$PATH:/u01/oracle/oracle_common/common/bin:/u01/oracle/container-scripts \
     ODI_AGENT_PORT=20910 \
@@ -61,7 +58,7 @@ RUN mkdir /u01 && \
 #
 # Copy required files to build this image
 # ---------------------------------------
-COPY $ODI_PKG1 $ODI_PKG2 oraInst.loc /u01/
+COPY $ODI_PKG1 oraInst.loc /u01/
 COPY container-scripts/* /u01/oracle/container-scripts/
 
 RUN chown oracle:oracle -R /u01 && \
@@ -73,9 +70,8 @@ RUN chown oracle:oracle -R /u01 && \
 USER oracle
 RUN cd /u01 && \
     $JAVA_HOME/bin/jar xf /u01/$ODI_PKG1  && \
-    $JAVA_HOME/bin/jar xf /u01/$ODI_PKG2  && \
     $JAVA_HOME/bin/java -jar /u01/$ODI_JAR -silent -invPtrLoc /u01/oraInst.loc -jreLoc $JAVA_HOME -ignoreSysPrereqs -force -novalidation ORACLE_HOME=$ORACLE_HOME INSTALL_TYPE="Standalone Installation" && \
-     rm /u01/$ODI_PKG1 /u01/$ODI_PKG2 /u01/$ODI_JAR /u01/$ODI_JAR2 /u01/fmw_12213_readme.htm /u01/oraInst.loc
+     rm /u01/$ODI_PKG1 /u01/$ODI_JAR /u01/fmw_12214_readme.html /u01/oraInst.loc
 
 WORKDIR $ORACLE_HOME
 
